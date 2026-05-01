@@ -1,0 +1,1 @@
+# Fix ML Model Feature Mismatch\n\n## Steps:\n1. [x] Plan created\n2. [ ] Edit app.py - fix model_data to 7 features, retrain\n3. [ ] Kill server (Ctrl+C), rerun `python app.py`\n4. [ ] Test /predict form → recs show\n5. [ ] Complete

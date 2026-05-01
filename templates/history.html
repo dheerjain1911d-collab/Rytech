@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}History — CropRec AI{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <div>
+                <h2 class="text-gradient mb-1">📋 Prediction History</h2>
+                <p class="text-secondary">Review your past crop recommendations and profit estimates.</p>
+            </div>
+            <a href="/predict" class="cr-btn cr-btn-primary">
+                <i class="fa-solid fa-plus me-2"></i> New Prediction
+            </a>
+        </div>
+
+        <div class="alert alert-info mb-4">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            Login with Google to see your personalized predictions log, profits, and trends.
+        </div>
+
+        <div class="cr-table-wrap">
+            <div class="table-responsive">
+                <table class="cr-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>Top Crop</th>
+                            <th>Score</th>
+                            <th>Est. Profit</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTable">
+                        {% if history and history|length > 0 %}
+                        {% for item in history %}
+                        {% set top_rec = item.ml_recommendations[0] if item.ml_recommendations and item.ml_recommendations|length > 0 else none %}
+                        <tr>
+                            <td>{{ item.timestamp.strftime('%Y-%m-%d %H:%M') if item.timestamp else '-' }}</td>
+                            <td>{{ item.location or '-' }}</td>
+                            <td>
+                                <strong>{{ top_rec.name if top_rec else '-' }}</strong>
+                            </td>
+                            <td>
+                                {% if top_rec and top_rec.score is number %}
+                                {{ "%.1f"|format(top_rec.score) }}%
+                                {% else %}-{% endif %}
+                            </td>
+                            <td>
+                                {% if top_rec and top_rec.score is number %}
+                                ₹{{ "%.0f"|format(top_rec.score * 10) }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/predict" class="cr-btn cr-btn-outline" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;">Reuse Inputs</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📭</div>
+                                    <p>No predictions yet.</p>
+                                    <a href="/predict" class="cr-btn cr-btn-primary mt-2">
+                                        Make Your First Prediction
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Home — CropRec AI{% endblock %}
+{% block content %}
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="row align-items-center min-vh-80">
+            <div class="col-lg-7">
+                <h1 class="hero-title">Smart Crop Recommendations Powered by AI</h1>
+                <p class="hero-subtitle">Advanced machine learning system using RandomForest & XGBoost models trained on agricultural NPK, weather, and soil data. Get personalized crop, fertilizer, and sustainability recommendations in seconds.</p>
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    <a href="/predict" class="cr-btn cr-btn-primary cr-btn-lg">
+                        <i class="fa-solid fa-arrow-right me-2"></i> Start Prediction
+                    </a>
+                    <a href="/history" class="cr-btn cr-btn-outline cr-btn-lg">
+                        <i class="fa-solid fa-clock-rotate-left me-2"></i> View History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

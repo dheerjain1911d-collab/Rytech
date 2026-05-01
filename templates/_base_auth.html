@@ -1,0 +1,15 @@
+<div class="user-info">
+    {% if current_user.is_authenticated %}
+        <span style="color: var(--text-secondary); font-size: 0.9rem;">
+            Hello, <strong style="color: var(--text-primary);">{{ current_user.email }}</strong>
+        </span>
+        <a href="/logout" class="cr-btn cr-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+        </a>
+    {% else %}
+        <a href="/login" class="cr-btn cr-btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+        </a>
+    {% endif %}
+</div>
+

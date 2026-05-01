@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Login — CropRec AI{% endblock %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="cr-card auth-card animate-in">
+            <div class="cr-card-body text-center">
+                <div class="mb-4">
+                    <span style="font-size: 3rem;">🔐</span>
+                </div>
+                <h2 class="auth-title">Welcome Back</h2>
+                <p class="auth-subtitle">Sign in with Google to save your prediction history and track trends.</p>
+
+                <a href="/auth/google" class="cr-btn cr-btn-danger cr-btn-block cr-btn-lg mb-3">
+                    <i class="fa-brands fa-google me-2"></i> Continue with Google
+                </a>
+
+                <div class="divider"></div>
+
+                <form method="POST" action="/login/local" class="text-start mb-3">
+                    <label class="cr-label"><span class="label-icon">✉️</span> Quick Login (no Google)</label>
+                    <input type="email" name="email" class="cr-input mb-3" placeholder="you@example.com" required>
+                    <button type="submit" class="cr-btn cr-btn-primary cr-btn-block">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Continue with Email
+                    </button>
+                </form>
+
+                <p class="mb-3" style="color: var(--text-secondary); font-size: 0.9rem;">Or continue in demo mode without login.</p>
+                <a href="/" class="cr-btn cr-btn-outline cr-btn-block">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

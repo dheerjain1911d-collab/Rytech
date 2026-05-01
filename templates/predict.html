@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Predict — CropRec AI{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row g-4 predict-page">
+    <!-- Form Panel -->
+    <div class="col-lg-8">
+        <div class="cr-card cr-card-accent-left animate-in">
+            <div class="cr-card-body">
+                <h2 class="mb-1 text-gradient">🔮 Get Crop Recommendations</h2>
+                <p class="text-secondary mb-4">Fill soil & weather data. Soil type auto-fills NPK values.</p>
+
+                <form id="cropForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="cr-form-group">
+                                <label class="cr-label"><span class="label-icon">🧪</span> Soil Type</label>
+                                <select id="soil_type" class="cr-select">
+                                    <option value="">Select soil type...</option>
+                                    <option value="loamy" data-n="80" data-p="40" data-k="60">Loamy</option>
+                                    <option value="sandy" data-n="50" data-p="20" data-k="40">Sandy</option>
+                                    <option value="clay" data-n="120" data-p="60" data-k="80">Clay</option>
+                                    <option value="red" data-n="70" data-p="30" data-k="50">Red</option>
+                                    <option value="black" data-n="100" data-p="50" data-k="70">Black</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cr-form-group">
+                                <label class="cr-label"><span class="label-icon">📍</span> Location (District/State)</label>
+                                <input type="text" id="location" class="cr-input" placeholder="e.g. Hyderabad, Telangana" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cr-form-group">
+                        <label class="cr-label"><span class="label-icon">🏞️</span> Farm Area (hectares)</label>
+                        <input type="number" id="area" class="cr-input" min="0.1" max="1000" step="0.1" value="1" required>
+                    </div>
+
+                    <!-- NPK Group -->
+                    <div class="cr-subcard animate-in animate-delay-1">
+                        <div class="cr-subcard-title">🧬 Nutrients (NPK)</div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="cr-label"><span class="label-icon">🌱</span> N (g/kg)</label>
+                                <input type="number" id="N" class="cr-input" min="0" max="200" step="0.1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="cr-label"><span class="label-icon">💧</span> P (g/kg)</label>
+                                <input type="number" id="P" class="cr-input" min="0" max="150" step="0.1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="cr-label"><span class="label-icon">⚡</span> K (g/kg)</label>
+                                <input type="number" id="K" class="cr-input" min="0" max="250" step="0.1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weather Group -->
+                    <div class="cr-subcard animate-in animate-delay-2">
+                        <div class="cr-subcard-title">🌤️ Weather Conditions</div>
+                        <div class="row g-3">
+                            <div class="col-md-3 col-6">
+                                <label class="cr-label"><span class="label-icon">🌡️</span> Temp (°C)</label>
+                                <input type="number" id="temperature" class="cr-input" min="0" max="50" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <label class="cr-label"><span class="label-icon">💨</span> Humidity (%)</label>
+                                <input type="number" id="humidity" class="cr-input" min="0" max="100" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <label class="cr-label"><span class="label-icon">⚖️</span> pH</label>
+                                <input type="number" id="ph" class="cr-input" min="0" max="14" step="0.1" required>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <label class="cr-label"><span class="label-icon">🌧️</span> Rainfall (mm)</label>
+                                <input type="number" id="rainfall" class="cr-input" min="0" max="5000" step="1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="cr-btn cr-btn-primary cr-btn-lg cr-btn-block mt-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Recommendations
+                    </button>
+                </form>
+
+                <button id="getWeather" class="cr-btn cr-btn-secondary cr-btn-block mt-3">
+                    <i class="fa-solid fa-location-dot"></i> Get Real Weather from Location
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="col-lg-4">
+        <div id="results" class="cr-card hidden">
+            <div class="rec-banner">
+                <span class="pulse-dot"></span>
+                <span>Recommendations</span>
+            </div>
+            <div class="cr-card-body">
+            <div id="recList"></div>
+
+                <!-- Comparison Table -->
+                <div class="comparison-section mt-4">
+                    <button type="button" class="cr-btn cr-btn-outline cr-btn-block" id="toggleComparison" onclick="toggleComparisonTable()">
+                        <i class="fa-solid fa-table me-2"></i> Toggle Comparison Table
+                    </button>
+                    <div id="comparisonTableWrap" class="hidden mt-3">
+                        <div class="table-responsive">
+                            <table class="cr-table comparison-table" id="comparisonTable">
+                                <thead>
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Type</th>
+                                        <th>Score</th>
+                                        <th>Water (KL/ha)</th>
+                                        <th>Env Score</th>
+                                        <th>Fertilizer</th>
+                                        <th>Next Crop</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comparisonTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="scoreChart" height="220"></canvas>
+                </div>
+                <div id="profit" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
+
