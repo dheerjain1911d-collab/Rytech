@@ -3,7 +3,6 @@ wheel
 Flask==2.2.5
 gunicorn==20.1.0
 scikit-learn==1.5.0
-pandas==2.2.2
 numpy==1.26.4
 Flask-PyMongo==2.3.0
 authlib==1.2.0
