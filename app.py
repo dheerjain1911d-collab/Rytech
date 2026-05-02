@@ -66,7 +66,6 @@ def load_user(user_id):
 
 # Sample crop data based on typical ICRISAT/agricultural guidelines (N,P,K in kg/ha, adjust to g/kg if needed)
 # Rules: Score based on how well inputs match optimal ranges for each crop
-import os
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
