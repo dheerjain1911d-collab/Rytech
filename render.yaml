@@ -1,7 +1,6 @@
 services:
   - type: web
     name: rytech
-    env: python
-    runtime: python-3.11
-    buildCommand: pip install -r requirements.txt
+    env: docker
+    dockerfilePath: Dockerfile
     startCommand: exec gunicorn app:app --workers 1 --timeout 120 --bind 0.0.0.0:$PORT
