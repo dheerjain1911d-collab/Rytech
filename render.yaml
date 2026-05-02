@@ -1,5 +1,4 @@
 services:
   - type: web
-    name: rytech
     env: docker
-    dockerfilePath: Dockerfile
+    dockerfilePath: ./Dockerfile
